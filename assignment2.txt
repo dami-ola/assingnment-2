@@ -1,0 +1,59 @@
+#include<iostream>
+using namespace std;
+
+class SparseMatrix {
+    int **data;
+    int non_zero;
+    int rows;
+    int cols;
+
+public:
+    SparseMatrix(int r, int c, int nz) : rows(r), cols(c), non_zero(nz) {
+        data = new int*[non_zero];
+        for (int i = 0; i < non_zero; i++)
+            data[i] = new int[3];
+    }
+
+    ~SparseMatrix() {
+        for (int i = 0; i < non_zero; i++)
+            delete[] data[i];
+        delete[] data;
+    }
+
+    void read() {
+        int row_indices[] = {0, 0, 1, 1, 3, 3};
+        int col_indices[] = {2, 4, 2, 3, 1, 2};
+        int values[] = {3, 4, 5, 7, 2, 6};
+        for (int i = 0; i < non_zero; i++) {
+            data[i][0] = row_indices[i];
+            data[i][1] = col_indices[i];
+            data[i][2] = values[i];
+        }
+    }
+
+    void print() {
+        int k = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (k < non_zero && data[k][0] == i && data[k][1] == j) {
+                    cout << data[k][2] << " ";
+                    k++;
+                } else {
+                    cout << "0 ";
+                }
+            }
+            cout << "\n";
+        }
+    }
+};
+
+int main() {
+    int rows = 4, cols = 5, non_zero = 6;
+
+    SparseMatrix sm(rows, cols, non_zero);
+    sm.read();
+    cout << "The sparse matrix is:\n";
+    sm.print();
+
+    return 0;
+}
